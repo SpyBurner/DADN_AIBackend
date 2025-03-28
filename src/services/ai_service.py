@@ -1,6 +1,20 @@
 from pinecone import Pinecone
 from deepface import DeepFace
 import cv2
+import numpy as np
+
+# LOAD ENVIRONMENT VARIABLES
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+PINECONE_KEY = os.getenv("PINECONE_KEY")
+INDEX_HOST = os.getenv("INDEX_HOST")
+DECTECTOR_BACKEND = os.getenv("DECTECTOR_BACKEND")
+
+pc = Pinecone(api_key=PINECONE_KEY)
+index = pc.Index(host=INDEX_HOST)
+
 # from pillow import Image
 
 pc = Pinecone(api_key=PINECONE_KEY)
@@ -35,7 +49,7 @@ class AIService:
             ]
             
             try:
-                index.upsert(namespace=namespace, vectors)
+                index.upsert(namespace, vectors)
             except Exception as e:
                 raise Exception(f"Error saving to Pinecone: {e}")
         except Exception as e:

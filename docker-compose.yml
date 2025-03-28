@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build: 
+      context: .
+      network: host
     container_name: dadn-aibackend
     ports:
       - "8000:8000"
@@ -12,11 +14,13 @@ services:
       - FLASK_APP=src/app.py
       - FLASK_RUN_HOST=0.0.0.0
       - FLASK_RUN_PORT=8000
-    command: ["flask", "run", "--host=0.0.0.0", "--port=8000", "--debug"]
+    # command: ["flask", "run", "--host=0.0.0.0", "--port=8000", "--debug"]0
+    command: ["python", "test_zone/6_test_gpu.py"]
+    # command: ["nvidia-smi"]
     deploy:
       resources:
         reservations:
           devices:
-            - driver: nvidia
-              count: 1
+            - driver: 'nvidia'
+              count: 1 # alternatively, use `count: all` for all GPUs
               capabilities: [gpu]
