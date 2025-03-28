@@ -15,10 +15,10 @@ services:
       - FLASK_RUN_HOST=0.0.0.0
       - FLASK_RUN_PORT=8000
     # command: ["flask", "run", "--host=0.0.0.0", "--port=8000", "--debug"]
-    # command: ["python", "test_zone/5_test_pinecone_query.py"]
+    command: ["python", "test_zone/5_test_pinecone_query.py"]
     # command: ["python", "test_zone/6_test_gpu.py"]
     # command: ["nvidia-smi"]
-    command: ["pip", "freeze", ">", "requirements_inner.txt"]
+    # command: ["pip", "freeze", ">", "requirements_inner.txt"]
     deploy:
       resources:
         reservations:
