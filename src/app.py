@@ -9,5 +9,9 @@ ai_service = AIService()  # Initialize AI service ahead of time
 
 app.register_blueprint(ai_blueprint, url_prefix="/ai")
 
+@app.route("/")
+def index():
+    return "Welcome to the AI Service!"
+
 if __name__ == "__main__":
     app.run(debug=True)

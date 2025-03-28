@@ -5,7 +5,8 @@ ai_blueprint = Blueprint("ai", __name__)
 ai_service = AIService()  # Initialize AI service
 
 @ai_blueprint.route("/save/<int:shopID>/<int:employeeID>", methods=["POST"])
-def save(shopId, employeeID):
+def save(shopID, employeeID):
+    # print(f"Received request to save image for shopId: {shopID}, employeeID: {employeeID}")
     if len(request.files) == 0:
         return jsonify({"error": "Image file is required"}), 400
     
@@ -13,7 +14,7 @@ def save(shopId, employeeID):
     
     try:
         # Can return error or success
-        result = ai_service.save(shopId, employeeID, image_file)
+        result = ai_service.save(shopID, employeeID, image_file)
         # else:
         #     result = ai_service.saveBatch(shopId, employeeID, images)
     except Exception as e:
@@ -36,4 +37,4 @@ def find(shopID):
         print(f"Error: {e}")
         return jsonify({"error": "Server-side error! Please check AI Backend console."}), 500
         
-    return jsonify({"message": "Image found successfully", "result": result}), 200
+    return result
