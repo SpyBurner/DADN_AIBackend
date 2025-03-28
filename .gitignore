@@ -26,4 +26,4 @@ pyenv
 Vagrantfile
 
 .env
-/test_zone
+/test_zone/test_img
