@@ -1,6 +1,6 @@
 # Project Setup and Execution
 
-### Python virtual environment
+# Python virtual environment
 ## Installation
 
 1. Clone the repository to your local machine.
@@ -20,7 +20,7 @@
 
 3. Open your browser and navigate to the URL provided in the terminal (usually `http://127.0.0.1:8000`).
 
-### Docker (not yet tested, not recommended)
+# Docker (not yet tested, not recommended)
     ```bash
     docker-compose up --build
     ```
