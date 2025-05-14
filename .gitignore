@@ -24,6 +24,6 @@ bundles/
 vendor/pkg/
 pyenv
 Vagrantfile
-
+myenv/
 .env
 /test_zone/test_img
