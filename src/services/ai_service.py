@@ -79,34 +79,47 @@ class AIService:
         
     
     def find(self, namespace, image_file):
-        
-        file_bytes = np.frombuffer(image_file.read(), np.uint8)
-        image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-        
-        if image is None:
-            raise ValueError("Invalid image data")
-        
-        embedding = DeepFace.represent(img_path=image, detector_backend=detector_backend)
-        
-        embedding_vector = embedding[0]['embedding']
-        
-        response = index.query(
-            namespace=str(namespace),
-            vector=embedding_vector,
-            top_k=1,
-            include_values=True,
-            include_id=True,
-        )
-        
-        import pickle
-        pickle.dump(response, open("response.pickle", "wb"))
-        
-        if (response['matches'] == []):
-            return {"error": "No match found"}, 404
-        
-        result = response['matches'][0]
-        
-        return {
-            "employeeID": result['id'],
-        }, 200
-        
+        print(f"Finding employee in namespace: {namespace}")
+        try:
+            file_bytes = np.frombuffer(image_file.read(), np.uint8)
+            print(f"Image file read successfully, size: {len(file_bytes)} bytes")
+            image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+            
+            if image is None:
+                print("Error: Invalid image data")
+                raise ValueError("Invalid image data")
+            
+            print(f"Image decoded successfully, shape: {image.shape}")
+            embedding = DeepFace.represent(img_path=image, detector_backend=detector_backend)
+            print("Face embedding generated successfully")
+            
+            embedding_vector = embedding[0]['embedding']
+            print(f"Embedding vector length: {len(embedding_vector)}")
+            
+            print(f"Querying Pinecone index in namespace: {namespace}")
+            response = index.query(
+                namespace=str(namespace),
+                vector=embedding_vector,
+                top_k=1,
+                include_values=True,
+                include_id=True,
+            )
+            print(f"Pinecone query completed, matches found: {len(response['matches'])}")
+            
+            import pickle
+            pickle.dump(response, open("response.pickle", "wb"))
+            print("Response saved to response.pickle")
+            
+            if (response['matches'] == []):
+                print("No match found in database")
+                return {"error": "No match found"}, 404
+            
+            result = response['matches'][0]
+            print(f"Match found with ID: {result['id']}, score: {result.get('score', 'N/A')}")
+            
+            return {
+                "user_id": result['id'],
+            }, 200
+        except Exception as e:
+            print(f"Error in find method: {str(e)}")
+            raise
