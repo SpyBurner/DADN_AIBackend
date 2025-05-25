@@ -5,12 +5,12 @@ WORKDIR /AIBackend
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 COPY ./requirements.txt ./ 
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN pip3 install tensorflow[and-cuda]
+RUN --mount=type=cache,target=/root/.cache/pip pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip pip install tensorflow[and-cuda]
 
 COPY ./src ./
 COPY ./.env ./
+COPY ./vgg_face_weights.h5 /root/.deepface/weights/vgg_face_weights.h5
 
 # Set Flask environment variables
 ENV FLASK_APP=src/app.py

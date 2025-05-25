@@ -10,6 +10,7 @@ import os
 load_dotenv()
 PINECONE_KEY = os.getenv("PINECONE_KEY")
 INDEX_HOST = os.getenv("INDEX_HOST")
+MIN_SCORE = float(os.getenv("MIN_SCORE", 0.5))  # Default to 0.5 if not set
 
 pc = Pinecone(api_key=PINECONE_KEY)
 index = pc.Index(host=INDEX_HOST)
@@ -110,7 +111,7 @@ class AIService:
             pickle.dump(response, open("response.pickle", "wb"))
             print("Response saved to response.pickle")
             
-            if (response['matches'] == []):
+            if (response['matches'] == [] or response['matches'][0].get('score', 0) < MIN_SCORE):
                 print("No match found in database")
                 return {"error": "No match found"}, 404
             
@@ -119,6 +120,7 @@ class AIService:
             
             return {
                 "user_id": result['id'],
+                "score": result.get('score', 'N/A'),
             }, 200
         except Exception as e:
             print(f"Error in find method: {str(e)}")
